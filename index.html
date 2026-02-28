@@ -1,0 +1,3513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ImpactMatch — L'IA au service de l'engagement</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg: #0a0a12;
+  --surface1: #12121c;
+  --surface2: #1a1a26;
+  --surface3: #222230;
+  --border: rgba(255,255,255,0.08);
+  --text: #ffffff;
+  --text-secondary: #a0a0b0;
+  --text-muted: #70707e;
+  --primary: #7fffd4;
+  --primary-dark: #5fd4b0;
+  --secondary: #74b9ff;
+  --accent1: #ffb347;
+  --accent2: #a29bfe;
+  --accent3: #55efc4;
+  --danger: #ff6b6b;
+  --warning: #ffd166;
+  --success: #00b894;
+  --gradient-1: linear-gradient(135deg, #7fffd4, #74b9ff);
+  --gradient-2: linear-gradient(135deg, #ffb347, #ff6b6b);
+  --gradient-3: linear-gradient(135deg, #a29bfe, #55efc4);
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 30px rgba(127,255,212,0.2);
+  --blur: blur(12px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background avec effet de grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 20% 30%, rgba(127,255,212,0.03) 0%, transparent 40%),
+              radial-gradient(circle at 80% 70%, rgba(116,185,255,0.03) 0%, transparent 40%),
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Animations globales */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(127,255,212,0.2); }
+  50% { box-shadow: 0 0 40px rgba(127,255,212,0.4); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* SCREENS */
+.screen {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.5s ease;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* LANDING SCREEN */
+#s-land {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.land-wrap {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  animation: scaleIn 0.6s ease;
+}
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  backdrop-filter: var(--blur);
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+h1.hero {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(3.5rem, 10vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 30px rgba(127,255,212,0.3);
+}
+
+.grad-c {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grad-a {
+  background: var(--gradient-2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.land-sub {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+.role-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.role-btn {
+  background: var(--surface1);
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  padding: 2.2rem 1.8rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: var(--blur);
+  animation: float 6s ease-in-out infinite;
+}
+
+.role-btn.c {
+  animation-delay: 0s;
+}
+
+.role-btn.a {
+  animation-delay: 0.2s;
+}
+
+.role-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(127,255,212,0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.role-btn.c::before {
+  background: radial-gradient(circle at 50% 0%, rgba(127,255,212,0.15), transparent 70%);
+}
+
+.role-btn.a::before {
+  background: radial-gradient(circle at 50% 0%, rgba(255,179,71,0.15), transparent 70%);
+}
+
+.role-btn:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(127,255,212,0.3);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(127,255,212,0.1);
+}
+
+.role-btn.c:hover {
+  border-color: rgba(127,255,212,0.4);
+}
+
+.role-btn.a:hover {
+  border-color: rgba(255,179,71,0.4);
+}
+
+.role-btn:hover::before {
+  opacity: 1;
+}
+
+.r-ico {
+  font-size: 3rem;
+  margin-bottom: 1.2rem;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.r-name {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.r-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+}
+
+.r-arrow {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: gap 0.3s;
+}
+
+.role-btn:hover .r-arrow {
+  gap: 0.8rem;
+}
+
+.r-arrow-c {
+  color: var(--primary);
+}
+
+.r-arrow-a {
+  color: var(--accent1);
+}
+
+/* AUTH MODAL */
+#auth-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.auth-container {
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 2.5rem;
+  max-width: 420px;
+  width: 90%;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn 0.4s ease;
+}
+
+.auth-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1rem;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(127,255,212,0.1);
+}
+
+.auth-input::placeholder {
+  color: var(--text-muted);
+}
+
+.auth-select {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1rem;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 50px;
+  background: var(--gradient-1);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md), 0 0 20px rgba(127,255,212,0.3);
+}
+
+.auth-switch {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.auth-switch a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.auth-switch a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  transform: rotate(90deg);
+}
+
+/* TOP NAVIGATION */
+.tnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,18,0.8);
+  backdrop-filter: var(--blur);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.tlogo {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.ttabs {
+  display: flex;
+  gap: 0.3rem;
+  background: var(--surface1);
+  padding: 0.2rem;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+}
+
+.ttab {
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  font-weight: 500;
+  background: transparent;
+}
+
+.ttab.ac {
+  background: rgba(127,255,212,0.1);
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(127,255,212,0.1);
+}
+
+.ttab.aa {
+  background: rgba(255,179,71,0.1);
+  color: var(--accent1);
+}
+
+.ttab:hover:not(.ac):not(.aa) {
+  color: var(--text);
+  background: var(--surface2);
+}
+
+.trole {
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.trole-c {
+  background: rgba(127,255,212,0.1);
+  color: var(--primary);
+  border: 1px solid rgba(127,255,212,0.2);
+}
+
+.trole-a {
+  background: rgba(255,179,71,0.1);
+  color: var(--accent1);
+  border: 1px solid rgba(255,179,71,0.2);
+}
+
+.tnav-r {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.switch-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.switch-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+  background: var(--surface2);
+}
+
+/* PAGE LAYOUT */
+.page-body {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--surface1);
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+/* COMPONENTS */
+.slabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+}
+
+.box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.2rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.9rem;
+  border-radius: 30px;
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin: 0.15rem;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+  background: var(--surface2);
+}
+
+.chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.chip.on {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(127,255,212,0.08);
+  box-shadow: 0 2px 8px rgba(127,255,212,0.1);
+}
+
+.chip-a.on {
+  border-color: var(--accent1);
+  color: var(--accent1);
+  background: rgba(255,179,71,0.08);
+}
+
+.user-mini {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.2s;
+}
+
+.user-mini:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background: var(--gradient-1);
+  box-shadow: 0 4px 12px rgba(127,255,212,0.2);
+}
+
+.avatar-a {
+  background: var(--gradient-2);
+}
+
+.avatar-sq {
+  border-radius: 14px;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-status {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.score-value {
+  font-weight: 700;
+}
+
+.score-c {
+  color: var(--primary);
+}
+
+.score-a {
+  color: var(--accent1);
+}
+
+/* SWIPE CARDS */
+.swipe-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 500px;
+  padding: 1.5rem;
+}
+
+.scard {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  overflow: hidden;
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.3s;
+  animation: scaleIn 0.4s ease;
+}
+
+.scard:active {
+  cursor: grabbing;
+}
+
+.scard.p1 {
+  z-index: 3;
+}
+
+.scard.p2 {
+  z-index: 2;
+  transform: scale(0.97) translateY(12px);
+  opacity: 0.6;
+  filter: blur(1px);
+}
+
+.scard.p3 {
+  z-index: 1;
+  transform: scale(0.94) translateY(24px);
+  opacity: 0.3;
+  filter: blur(2px);
+}
+
+.scard.fr {
+  animation: swipeRight 0.4s ease forwards;
+}
+
+.scard.fl {
+  animation: swipeLeft 0.4s ease forwards;
+}
+
+@keyframes swipeRight {
+  to {
+    transform: translateX(130%) rotate(16deg);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeLeft {
+  to {
+    transform: translateX(-130%) rotate(-16deg);
+    opacity: 0;
+  }
+}
+
+.overlay-like, .overlay-pass {
+  position: absolute;
+  top: 1.5rem;
+  z-index: 10;
+  padding: 0.4rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.1s;
+  font-family: 'Clash Display', sans-serif;
+  pointer-events: none;
+  backdrop-filter: var(--blur);
+}
+
+.overlay-like {
+  right: 1.5rem;
+  background: rgba(127,255,212,0.2);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  transform: rotate(8deg);
+}
+
+.overlay-pass {
+  left: 1.5rem;
+  background: rgba(255,107,107,0.2);
+  border: 2px solid var(--danger);
+  color: var(--danger);
+  transform: rotate(-8deg);
+}
+
+.card-header {
+  height: 180px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.2rem 1.5rem;
+}
+
+.card-emoji-bg {
+  position: absolute;
+  inset: 0;
+  font-size: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.15;
+}
+
+.org-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: var(--blur);
+  padding: 0.3rem 0.9rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  color: #fff;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.score-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  backdrop-filter: var(--blur);
+  border: 1px solid;
+  font-family: 'Clash Display', sans-serif;
+}
+
+.urgent-tag {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 1.5rem;
+  background: var(--danger);
+  color: #fff;
+  padding: 0.2rem 0.7rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  animation: pulse 2s infinite;
+}
+
+.card-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.card-body {
+  padding: 1.2rem 1.5rem 1.5rem;
+}
+
+.impact-box {
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.impact-box strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  padding: 0.25rem 0.8rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.tag-s {
+  border-color: rgba(116,185,255,0.4);
+  color: var(--secondary);
+  background: rgba(116,185,255,0.08);
+}
+
+.tag-v {
+  border-color: rgba(127,255,212,0.4);
+  color: var(--primary);
+  background: rgba(127,255,212,0.08);
+}
+
+.tag-t {
+  border-color: rgba(255,209,102,0.4);
+  color: var(--warning);
+  background: rgba(255,209,102,0.08);
+}
+
+.why-box {
+  background: rgba(127,255,212,0.04);
+  border: 1px solid rgba(127,255,212,0.12);
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.why-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.why-item {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.why-item::before {
+  content: '→';
+  color: var(--primary);
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1rem 1.5rem 1.8rem;
+}
+
+.action-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: var(--surface1);
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.action-btn:hover {
+  transform: scale(1.1) rotate(8deg);
+  box-shadow: var(--shadow-md);
+}
+
+.action-btn.pass {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.action-btn.pass:hover {
+  background: rgba(255,107,107,0.1);
+}
+
+.action-btn.like {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.action-btn.like:hover {
+  background: rgba(127,255,212,0.1);
+}
+
+.action-btn.super {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  width: 48px;
+  height: 48px;
+  font-size: 1rem;
+}
+
+.action-btn.super:hover {
+  background: rgba(162,155,254,0.1);
+}
+
+/* LIKED ITEMS */
+.liked-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 0.7rem;
+  border: 1px solid rgba(127,255,212,0.15);
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+}
+
+.liked-item:hover {
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+/* COPILOT */
+.copilot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.copilot-panel {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+
+.copilot-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.copilot-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+}
+
+.quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.quick-prompt {
+  padding: 0.3rem 1rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  background: rgba(255,179,71,0.08);
+  border: 1px solid rgba(255,179,71,0.2);
+  color: var(--accent1);
+  transition: all 0.2s;
+}
+
+.quick-prompt:hover {
+  background: rgba(255,179,71,0.15);
+  transform: translateY(-2px);
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  padding-right: 0.3rem;
+}
+
+.message {
+  max-width: 85%;
+  border-radius: 16px;
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  animation: fadeIn 0.3s ease;
+}
+
+.message-ai {
+  align-self: flex-start;
+  background: rgba(255,179,71,0.08);
+  border: 1px solid rgba(255,179,71,0.2);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+
+.message-ai .ai-label {
+  font-size: 0.7rem;
+  color: var(--accent1);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.message-user {
+  align-self: flex-end;
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-bottom-right-radius: 4px;
+}
+
+.typing {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent1);
+  animation: typing 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-8px); opacity: 1; }
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.chat-input {
+  flex: 1;
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  color: var(--text);
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.chat-input:focus {
+  border-color: var(--accent1);
+  box-shadow: 0 0 0 3px rgba(255,179,71,0.1);
+}
+
+.chat-send {
+  background: var(--gradient-2);
+  border: none;
+  border-radius: 12px;
+  width: 42px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--bg);
+  transition: all 0.2s;
+}
+
+.chat-send:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255,179,71,0.3);
+}
+
+.chat-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* MISSION PREVIEW */
+.mission-preview {
+  background: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.preview-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.preview-emoji {
+  font-size: 1.8rem;
+}
+
+.preview-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.preview-org {
+  font-size: 0.75rem;
+  color: var(--accent1);
+  margin-top: 0.1rem;
+}
+
+.preview-complete {
+  padding: 0.3rem 0.9rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(85,239,196,0.1);
+  color: var(--accent3);
+  border: 1px solid rgba(85,239,196,0.2);
+}
+
+.preview-body {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.preview-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.preview-value {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.preview-tag {
+  padding: 0.25rem 0.8rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.preview-scores {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.preview-score-item {
+  flex: 1;
+  background: var(--surface2);
+  border-radius: 12px;
+  padding: 0.8rem;
+  text-align: center;
+}
+
+.preview-score-value {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.preview-score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.publish-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 50px;
+  background: var(--gradient-2);
+  color: var(--bg);
+  border: none;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(255,179,71,0.2);
+  margin-top: 1rem;
+}
+
+.publish-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(255,179,71,0.3);
+}
+
+.publish-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* CANDIDATES GRID */
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.2rem;
+}
+
+.candidate-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.3s;
+  animation: fadeIn 0.5s ease;
+}
+
+.candidate-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,179,71,0.3);
+  box-shadow: var(--shadow-md);
+}
+
+.candidate-header {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.candidate-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  background: var(--gradient-1);
+  box-shadow: 0 4px 12px rgba(127,255,212,0.2);
+}
+
+.candidate-info {
+  flex: 1;
+}
+
+.candidate-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.candidate-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.candidate-score {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+}
+
+.score-high {
+  color: var(--accent3);
+  background: rgba(85,239,196,0.1);
+  border: 1px solid rgba(85,239,196,0.2);
+}
+
+.score-medium {
+  color: var(--accent1);
+  background: rgba(255,179,71,0.1);
+  border: 1px solid rgba(255,179,71,0.2);
+}
+
+.candidate-body {
+  padding: 1.2rem 1.5rem;
+}
+
+.candidate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+.badge-new {
+  background: rgba(255,179,71,0.1);
+  color: var(--accent1);
+  border: 1px solid rgba(255,179,71,0.2);
+}
+
+.badge-validated {
+  background: rgba(85,239,196,0.1);
+  color: var(--accent3);
+  border: 1px solid rgba(85,239,196,0.2);
+}
+
+.mission-tag {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+}
+
+.candidate-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.candidate-tag {
+  padding: 0.2rem 0.7rem;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  border: 1px solid;
+}
+
+.tag-skill {
+  border-color: rgba(116,185,255,0.3);
+  color: var(--secondary);
+  background: rgba(116,185,255,0.05);
+}
+
+.tag-value {
+  border-color: rgba(127,255,212,0.3);
+  color: var(--primary);
+  background: rgba(127,255,212,0.05);
+}
+
+.score-bars {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.bar-item {
+  flex: 1;
+}
+
+.bar-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.bar-bg {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.bar-value {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  text-align: right;
+}
+
+.candidate-why {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  background: rgba(127,255,212,0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(127,255,212,0.05);
+}
+
+.candidate-why span {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.candidate-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.btn-validate {
+  flex: 1;
+  padding: 0.7rem;
+  border-radius: 30px;
+  border: none;
+  background: var(--gradient-3);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-validate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(85,239,196,0.3);
+}
+
+.btn-later, .btn-refuse {
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-later:hover {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.btn-refuse:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* DASHBOARD */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(127,255,212,0.2);
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-1);
+}
+
+.kpi-value {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.kpi-trend {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 30px;
+}
+
+.trend-up {
+  background: rgba(85,239,196,0.15);
+  color: var(--accent3);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1.2rem;
+}
+
+.dashboard-widget {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.3rem;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.widget-title {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.widget-action {
+  font-size: 0.8rem;
+  color: var(--accent1);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.widget-action:hover {
+  color: var(--primary);
+}
+
+.mission-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.mission-row:last-child {
+  border-bottom: none;
+}
+
+.mission-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-active {
+  background: var(--accent3);
+  box-shadow: 0 0 10px var(--accent3);
+}
+
+.dot-pending {
+  background: var(--warning);
+}
+
+.dot-draft {
+  background: var(--text-muted);
+}
+
+.mission-info {
+  flex: 1;
+}
+
+.mission-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.mission-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.mission-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9px;
+  background: rgba(255,179,71,0.1);
+  color: var(--accent1);
+  border: 1px solid rgba(255,179,71,0.2);
+  font-weight: 600;
+}
+
+/* CHART */
+.chart-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 80px;
+  margin-bottom: 0.3rem;
+}
+
+.chart-bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.7;
+}
+
+.chart-bar:hover {
+  opacity: 1;
+  transform: scaleY(1.02);
+}
+
+.chart-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* FEED */
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--surface1);
+  border-radius: 12px;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.feed-item:hover {
+  border-color: var(--accent1);
+  transform: translateX(4px);
+}
+
+.feed-icon {
+  font-size: 1.2rem;
+}
+
+.feed-content {
+  flex: 1;
+}
+
+.feed-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.feed-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.feed-score {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent3);
+}
+
+/* MATCH SCREEN */
+#s-match {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: radial-gradient(circle at 50% 50%, rgba(127,255,212,0.1), transparent 70%);
+}
+
+.match-popup {
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  animation: scaleIn 0.5s ease;
+}
+
+.match-emoji {
+  font-size: 5rem;
+  animation: float 3s infinite, glow 2s infinite;
+}
+
+.match-popup h2 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 0.6rem 0 0.4rem;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.match-popup p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.match-mini {
+  background: var(--surface1);
+  border: 1px solid rgba(127,255,212,0.2);
+  border-radius: 24px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  box-shadow: var(--shadow-lg);
+}
+
+.match-org {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.4rem;
+}
+
+.match-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.match-score {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.match-score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.match-reasons {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.match-buttons {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.btn-contact {
+  flex: 1;
+  padding: 0.9rem;
+  border-radius: 50px;
+  background: var(--gradient-1);
+  color: var(--bg);
+  border: none;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-contact:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(127,255,212,0.3);
+}
+
+.btn-skip {
+  padding: 0.9rem 1.5rem;
+  border-radius: 50px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-skip:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  animation: slideInRight 0.3s ease;
+  max-width: 320px;
+  backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-lg);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-c {
+  background: rgba(85,239,196,0.1);
+  border: 1px solid rgba(85,239,196,0.3);
+  color: var(--accent3);
+}
+
+.toast-a {
+  background: rgba(255,179,71,0.1);
+  border: 1px solid rgba(255,179,71,0.3);
+  color: var(--accent1);
+}
+
+/* AI THINKING */
+.ai-thinking {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0.8rem;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .role-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .copilot-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+  
+  .page-body {
+    height: auto;
+  }
+  
+  .main {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .tnav {
+    padding: 0.8rem 1rem;
+  }
+  
+  .ttabs {
+    display: none;
+  }
+  
+  .actions {
+    gap: 0.8rem;
+  }
+  
+  .action-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+  }
+  
+  .candidates-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* LOADING STATES */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* EMPTY STATES */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-desc {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Modal -->
+<div id="auth-modal">
+  <div class="auth-container">
+    <button class="close-btn" onclick="closeAuth()">&times;</button>
+    <div class="auth-title">ImpactMatch</div>
+    
+    <div id="login-form">
+      <input type="email" id="login-email" class="auth-input" placeholder="Email" value="greenpeace@demo.org">
+      <input type="password" id="login-password" class="auth-input" placeholder="Mot de passe" value="demo123">
+      <button class="auth-btn" onclick="handleLogin()">Se connecter</button>
+      <div class="auth-switch">
+        Pas encore de compte ? <a href="#" onclick="showRegister()">S'inscrire</a>
+      </div>
+    </div>
+    
+    <div id="register-form" style="display: none;">
+      <input type="email" id="reg-email" class="auth-input" placeholder="Email">
+      <input type="password" id="reg-password" class="auth-input" placeholder="Mot de passe">
+      <select id="reg-type" class="auth-select">
+        <option value="citizen">Citoyen engagé</option>
+        <option value="association">Association</option>
+      </select>
+      <button class="auth-btn" onclick="handleRegister()">S'inscrire</button>
+      <div class="auth-switch">
+        Déjà inscrit ? <a href="#" onclick="showLogin()">Se connecter</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LANDING SCREEN -->
+<div class="screen active" id="s-land">
+  <div class="land-wrap">
+    <div class="brand-pill">
+      <div class="pulse"></div>
+      <span>ImpactMatch · IA Powered</span>
+    </div>
+    <h1 class="hero">
+      Connect.<br>
+      <span class="grad-c">Engage.</span><br>
+      <span class="grad-a">Impact.</span>
+    </h1>
+    <p class="land-sub">
+      La plateforme de matching IA qui connecte les talents citoyens aux associations qui en ont besoin — en temps réel.
+    </p>
+    <div class="role-row">
+      <div class="role-btn c" onclick="showAuth('citizen')">
+        <span class="r-ico">🙋</span>
+        <div class="r-name grad-c">Citoyen engagé</div>
+        <p class="r-desc">Trouve la mission qui correspond vraiment à tes compétences et tes valeurs.</p>
+        <div class="r-arrow r-arrow-c">
+          <span>Explorer les missions</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+      <div class="role-btn a" onclick="showAuth('asso')">
+        <span class="r-ico">🏢</span>
+        <div class="r-name grad-a">Association</div>
+        <p class="r-desc">Publie des missions avec l'IA et trouve les bénévoles parfaitement qualifiés.</p>
+        <div class="r-arrow r-arrow-a">
+          <span>Accéder au portail</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CITIZEN SCREEN -->
+<div class="screen" id="s-citizen">
+  <div class="tnav">
+    <div class="tlogo">
+      <div class="tdot" style="background:var(--primary)"></div>
+      <span>ImpactMatch</span>
+    </div>
+    <div class="ttabs">
+      <button class="ttab ac" id="tab-swipe" onclick="ctab('swipe')">Missions</button>
+      <button class="ttab" id="tab-profile" onclick="ctab('profile')">Mon profil</button>
+    </div>
+    <div class="tnav-r">
+      <div class="trole trole-c" id="citizen-name">Citoyen</div>
+      <button class="switch-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="cv-swipe" class="page-body">
+    <div class="sidebar">
+      <div class="user-mini">
+        <div class="avatar">🙋</div>
+        <div>
+          <div class="user-name" id="c-uname">Mon Profil</div>
+          <div class="user-status">Score <span class="score-value score-c" id="c-score">85</span></div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="slabel">Filtres actifs</div>
+        <div id="c-filters">
+          <span class="chip on" data-filter="env" onclick="toggleFilter(this)">🌱 Environnement</span>
+          <span class="chip on" data-filter="edu" onclick="toggleFilter(this)">📚 Éducation</span>
+          <span class="chip" data-filter="health" onclick="toggleFilter(this)">⚕️ Santé</span>
+          <span class="chip on" data-filter="tech" onclick="toggleFilter(this)">💻 Tech</span>
+          <span class="chip" data-filter="culture" onclick="toggleFilter(this)">🎨 Culture</span>
+          <span class="chip on" data-filter="near" onclick="toggleFilter(this)">📍 Près de moi</span>
+        </div>
+      </div>
+      
+      <div>
+        <div class="slabel">Missions likées <span class="score-c" id="lc">0</span></div>
+        <div id="liked-list">
+          <div style="font-size:0.8rem; color:var(--text-muted); font-style:italic">Aucune encore</div>
+        </div>
+      </div>
+      
+      <div style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border)">
+        <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.6">
+          <i class="fas fa-lightbulb" style="color:var(--primary); margin-right:0.3rem;"></i>
+          <strong style="color:var(--text)">Conseil IA :</strong>
+          <span id="ai-tip">Complète ton profil pour des matchs plus précis !</span>
+        </div>
+      </div>
+    </div>
+    
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:1.2rem 2rem 0">
+        <div style="font-family:'Clash Display',sans-serif; font-size:1.4rem; font-weight:600">Pour toi</div>
+        <div class="chip" style="background:rgba(127,255,212,0.1); border-color:rgba(127,255,212,0.2); color:var(--primary)" id="cnt">
+          — missions
+        </div>
+      </div>
+      
+      <div class="swipe-stage" id="stage"></div>
+      
+      <div class="actions">
+        <button class="action-btn pass" onclick="swipe('l')" title="Passer">
+          <i class="fas fa-times"></i>
+        </button>
+        <button class="action-btn super" onclick="swipe('l')" title="Plus tard">
+          <i class="fas fa-bookmark"></i>
+        </button>
+        <button class="action-btn like" onclick="swipe('r')" title="J'aime">
+          <i class="fas fa-heart"></i>
+        </button>
+        <button class="action-btn super" onclick="swipe('r')" title="Super like">
+          <i class="fas fa-bolt"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cv-profile" style="display:none; flex:1; padding:2rem; overflow-y:auto; max-width:800px; margin:0 auto; width:100%">
+    <div style="font-family:'Clash Display',sans-serif; font-size:1.8rem; font-weight:600; margin-bottom:0.5rem">
+      Ton profil augmenté
+    </div>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:2rem">
+      Plus ton profil est riche, plus les matchs IA seront précis. L'IA analyse tout pour toi.
+    </p>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.5rem">
+      <div>
+        <div class="slabel">Prénom</div>
+        <input class="auth-input" id="p-name" placeholder="Ex: Amira" value="Amira">
+      </div>
+      <div>
+        <div class="slabel">Ville</div>
+        <input class="auth-input" id="p-city" placeholder="Ex: Tunis" value="Tunis">
+      </div>
+      <div>
+        <div class="slabel">Métier</div>
+        <input class="auth-input" id="p-job" placeholder="Ex: Designer UX" value="Designer UX">
+      </div>
+      <div>
+        <div class="slabel">Âge</div>
+        <input class="auth-input" id="p-age" type="number" placeholder="24" value="24">
+      </div>
+    </div>
+    
+    <div style="margin-bottom:1.5rem">
+      <div class="slabel">Compétences</div>
+      <div id="skills-chips" style="margin-top:0.5rem"></div>
+    </div>
+    
+    <div style="margin-bottom:1.5rem">
+      <div class="slabel">Valeurs</div>
+      <div id="values-chips" style="margin-top:0.5rem"></div>
+    </div>
+    
+    <div style="margin-bottom:2rem">
+      <div class="slabel">Disponibilités</div>
+      <div id="avail-chips" style="margin-top:0.5rem"></div>
+    </div>
+    
+    <button onclick="analyzeProfile()" class="auth-btn" id="analyze-btn" style="background:var(--gradient-1)">
+      <i class="fas fa-magic"></i> Analyser mon profil avec l'IA
+    </button>
+    
+    <div id="profile-result" style="margin-top:1.5rem"></div>
+  </div>
+</div>
+
+<!-- MATCH SCREEN -->
+<div class="screen" id="s-match">
+  <div class="match-popup">
+    <div class="match-emoji">🎉</div>
+    <h2>C'est un Match !</h2>
+    <p>L'association a validé ton profil. Tu peux maintenant les contacter.</p>
+    <div class="match-mini" id="match-detail"></div>
+    <div class="match-buttons">
+      <button class="btn-contact" onclick="openChat()">
+        <i class="fas fa-comment"></i> Contacter
+      </button>
+      <button class="btn-skip" onclick="ss('s-citizen');ctab('swipe')">
+        Continuer <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSO COPILOT SCREEN -->
+<div class="screen" id="s-asso-cop">
+  <div class="tnav">
+    <div class="tlogo">
+      <div class="tdot" style="background:var(--accent1)"></div>
+      <span>ImpactMatch</span>
+    </div>
+    <div class="ttabs">
+      <button class="ttab" onclick="ss('s-asso-dash')">Dashboard</button>
+      <button class="ttab aa">✨ CoPilot IA</button>
+      <button class="ttab" onclick="ss('s-asso-cands');loadCandidates()">Candidats</button>
+    </div>
+    <div class="tnav-r">
+      <div class="trole trole-a" id="asso-name">Association</div>
+      <button class="switch-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="page-body">
+    <div class="sidebar">
+      <div class="user-mini">
+        <div class="avatar avatar-a avatar-sq" id="asso-logo">🌊</div>
+        <div>
+          <div class="user-name" id="asso-display-name">Greenpeace Maroc</div>
+          <div class="user-status">Profil <span class="score-value score-a" id="asso-score">92%</span></div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="slabel">Missions actives</div>
+        <div id="a-missions-list" style="display:flex; flex-direction:column; gap:0.5rem"></div>
+      </div>
+      
+      <div style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border)">
+        <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.6">
+          <i class="fas fa-robot" style="color:var(--accent1); margin-right:0.3rem;"></i>
+          <strong style="color:var(--text)">IA CoPilot</strong> — génération de missions en langage naturel
+        </div>
+      </div>
+    </div>
+    
+    <div class="main">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:'Clash Display',sans-serif; font-size:1.6rem; font-weight:600; margin-bottom:0.3rem">
+          ✨ CoPilot — Créer une mission
+        </div>
+        <div style="font-size:0.9rem; color:var(--text-muted)">
+          Décris ta mission librement. L'IA génère une fiche augmentée optimisée.
+        </div>
+      </div>
+      
+      <div class="copilot-grid">
+        <div class="copilot-panel">
+          <div class="copilot-title">🤖 Assistant IA</div>
+          <div class="copilot-sub">Dis-moi ce dont tu as besoin en langage naturel</div>
+          
+          <div class="quick-prompts">
+            <span class="quick-prompt" onclick="quickPrompt('J\'ai besoin d\'un graphiste pour créer des visuels pour notre campagne')">
+              📢 Campagne
+            </span>
+            <span class="quick-prompt" onclick="quickPrompt('Nous cherchons quelqu\'un pour créer du contenu pour nos réseaux sociaux')">
+              🎨 Contenu
+            </span>
+            <span class="quick-prompt" onclick="quickPrompt('Nous avons besoin d\'aide pour notre site web et présence digitale')">
+              💻 Digital
+            </span>
+            <span class="quick-prompt" onclick="quickPrompt('Nous organisons des ateliers de formation pour jeunes')">
+              📚 Formation
+            </span>
+          </div>
+          
+          <div class="chat-container">
+            <div class="messages" id="cop-msgs">
+              <div class="message message-ai">
+                <div class="ai-label">
+                  <i class="fas fa-robot"></i> CoPilot IA
+                </div>
+                Bonjour ! Je suis ton assistant IA pour créer des fiches missions qui attirent vraiment les bons profils.<br><br>
+                Décris-moi le besoin de ton association — type de mission, domaine, durée. Je génère la fiche complète en temps réel ! 🎯
+              </div>
+            </div>
+            
+            <div class="chat-input-row">
+              <input class="chat-input" id="cop-in" placeholder="Ex: J'ai besoin d'un graphiste pour notre campagne océans…" 
+                     onkeydown="if(event.key==='Enter'&&!event.shiftKey)copSend()">
+              <button class="chat-send" id="cop-send" onclick="copSend()">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="copilot-panel">
+          <div class="copilot-title">📋 Fiche mission</div>
+          <div class="copilot-sub">Générée par l'IA en temps réel</div>
+          
+          <div class="mission-preview" id="mprev">
+            <div class="preview-header">
+              <div class="preview-header-left">
+                <div class="preview-emoji" id="mp-e">✏️</div>
+                <div>
+                  <div class="preview-title" id="mp-n">En cours…</div>
+                  <div class="preview-org" id="mp-org">Association</div>
+                </div>
+              </div>
+              <div class="preview-complete" id="mp-pct">0%</div>
+            </div>
+            
+            <div class="preview-body">
+              <div>
+                <div class="preview-label">Impact attendu</div>
+                <div class="preview-value" id="mp-imp" style="color:var(--text-muted); font-style:italic">
+                  Sera généré par l'IA…
+                </div>
+              </div>
+              
+              <div>
+                <div class="preview-label">Compétences recherchées</div>
+                <div class="preview-tags" id="mp-tags">
+                  <span style="font-size:0.8rem; color:var(--text-muted); font-style:italic">En attente…</span>
+                </div>
+              </div>
+              
+              <div>
+                <div class="preview-label">Engagement requis</div>
+                <div class="preview-value" id="mp-eng" style="color:var(--text-muted); font-style:italic">
+                  À définir…
+                </div>
+              </div>
+              
+              <div id="mp-scores" style="display:none">
+                <div class="preview-label">Estimations IA</div>
+                <div class="preview-scores">
+                  <div class="preview-score-item">
+                    <div class="preview-score-value" id="ms1" style="color:var(--accent1)">—</div>
+                    <div class="preview-score-label">Profils</div>
+                  </div>
+                  <div class="preview-score-item">
+                    <div class="preview-score-value" id="ms2" style="color:var(--accent3)">—</div>
+                    <div class="preview-score-label">Attractivité</div>
+                  </div>
+                  <div class="preview-score-item">
+                    <div class="preview-score-value" id="ms3" style="color:var(--secondary)">—</div>
+                    <div class="preview-score-label">Matchs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="publish-btn" id="pub-btn" disabled onclick="publishMission()">
+            <i class="fas fa-rocket"></i> Publier et lancer le matching
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSO CANDIDATES SCREEN -->
+<div class="screen" id="s-asso-cands">
+  <div class="tnav">
+    <div class="tlogo">
+      <div class="tdot" style="background:var(--accent1)"></div>
+      <span>ImpactMatch</span>
+    </div>
+    <div class="ttabs">
+      <button class="ttab" onclick="ss('s-asso-dash')">Dashboard</button>
+      <button class="ttab" onclick="ss('s-asso-cop')">✨ CoPilot</button>
+      <button class="ttab aa">Candidats</button>
+    </div>
+    <div class="tnav-r">
+      <div class="trole trole-a">Association</div>
+      <button class="switch-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="page-body">
+    <div class="sidebar">
+      <div class="user-mini">
+        <div class="avatar avatar-a avatar-sq">🌊</div>
+        <div>
+          <div class="user-name" id="asso-name-side">Greenpeace Maroc</div>
+          <div class="user-status">Profil <span class="score-a">92%</span></div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="slabel">Filtrer par mission</div>
+        <div style="display:flex; flex-direction:column; gap:0.4rem">
+          <span class="chip chip-a on" style="display:block" onclick="filterBy('all',this)">Toutes (24)</span>
+          <span class="chip chip-a" style="display:block" onclick="filterBy('comm',this)">📢 Campagne comm. (8)</span>
+          <span class="chip chip-a" style="display:block" onclick="filterBy('atelier',this)">🎓 Atelier écoles (6)</span>
+          <span class="chip chip-a" style="display:block" onclick="filterBy('design',this)">🎨 Design (10)</span>
+        </div>
+      </div>
+      
+      <div>
+        <div class="slabel">Statut</div>
+        <div>
+          <span class="chip chip-a on" onclick="filterStatus('new',this)">🆕 Nouveaux (4)</span>
+          <span class="chip chip-a on" onclick="filterStatus('validated',this)">✅ Validés (12)</span>
+          <span class="chip chip-a" onclick="filterStatus('waiting',this)">⏳ En attente (8)</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem">
+        <div>
+          <div style="font-family:'Clash Display',sans-serif; font-size:1.4rem; font-weight:600">
+            Candidats matchés par l'IA
+          </div>
+          <div style="font-size:0.9rem; color:var(--text-muted); margin-top:0.2rem">
+            <span id="total-candidates">24</span> profils · <span id="new-candidates">4</span> nouveaux
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem">
+          <span class="chip chip-a on" onclick="sortBy('score')">Score IA ↓</span>
+          <span class="chip chip-a" onclick="sortBy('date')">Plus récents</span>
+        </div>
+      </div>
+      
+      <div class="candidates-grid" id="cands-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSO DASHBOARD SCREEN -->
+<div class="screen" id="s-asso-dash">
+  <div class="tnav">
+    <div class="tlogo">
+      <div class="tdot" style="background:var(--accent1)"></div>
+      <span>ImpactMatch</span>
+    </div>
+    <div class="ttabs">
+      <button class="ttab aa">Dashboard</button>
+      <button class="ttab" onclick="ss('s-asso-cop')">✨ CoPilot IA</button>
+      <button class="ttab" onclick="ss('s-asso-cands');loadCandidates()">Candidats</button>
+    </div>
+    <div class="tnav-r">
+      <div class="trole trole-a" id="dash-asso-name">Association</div>
+      <button class="switch-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="page-body">
+    <div class="sidebar">
+      <div class="user-mini">
+        <div class="avatar avatar-a avatar-sq" id="dash-logo">🌊</div>
+        <div>
+          <div class="user-name" id="dash-asso-display">Greenpeace Maroc</div>
+          <div class="user-status">Profil <span class="score-a" id="dash-score">92%</span></div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="slabel">Actions rapides</div>
+        <button onclick="ss('s-asso-cop')" style="width:100%; padding:0.7rem; border-radius:12px; background:rgba(255,179,71,0.1); border:1px solid rgba(255,179,71,0.2); color:var(--accent1); margin-bottom:0.5rem; cursor:pointer">
+          <i class="fas fa-magic"></i> Créer une mission
+        </button>
+        <button onclick="ss('s-asso-cands');loadCandidates()" style="width:100%; padding:0.7rem; border-radius:12px; background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer">
+          <i class="fas fa-users"></i> Voir candidats
+          <span class="noti" id="sidebar-noti">4</span>
+        </button>
+      </div>
+      
+      <div>
+        <div class="slabel">Alertes</div>
+        <div style="background:rgba(255,179,71,0.05); border:1px solid rgba(255,179,71,0.15); border-radius:12px; padding:0.8rem; font-size:0.8rem; margin-bottom:0.5rem">
+          <i class="fas fa-bell" style="color:var(--accent1)"></i>
+          <strong style="color:var(--accent1)"><span id="new-matches-alert">4</span> nouveaux matchs</strong>
+          <div style="color:var(--text-muted); margin-top:0.3rem">sur "Campagne comm."</div>
+        </div>
+        <div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.15); border-radius:12px; padding:0.8rem; font-size:0.8rem">
+          <i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i>
+          <strong style="color:var(--danger)">Atelier écoles</strong>
+          <div style="color:var(--text-muted); margin-top:0.3rem">deadline dans 5 jours, 0 bénévole</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:'Clash Display',sans-serif; font-size:1.6rem; font-weight:600">
+          Bonjour, <span id="dash-greeting">Greenpeace</span> 🌊
+        </div>
+        <div style="font-size:0.9rem; color:var(--text-muted); margin-top:0.2rem" id="current-date"></div>
+      </div>
+      
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-value" id="stat-missions" style="color:var(--accent1)">7</div>
+          <div class="kpi-label">Missions actives</div>
+          <div class="kpi-trend trend-up" id="stat-missions-change">+2 ↑</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="stat-candidates" style="color:var(--accent3)">24</div>
+          <div class="kpi-label">Candidats IA</div>
+          <div class="kpi-trend trend-up" id="stat-candidates-change">+4 ↑</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="stat-match-rate" style="color:var(--secondary)">89%</div>
+          <div class="kpi-label">Taux matching</div>
+          <div class="kpi-trend trend-up" id="stat-match-change">+3% ↑</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="stat-impact" style="color:var(--warning)">1.2k</div>
+          <div class="kpi-label">Personnes impactées</div>
+          <div class="kpi-trend trend-up" id="stat-impact-change">+120 ↑</div>
+        </div>
+      </div>
+      
+      <div class="dashboard-grid">
+        <div class="dashboard-widget">
+          <div class="widget-header">
+            <div class="widget-title">Missions en cours</div>
+            <div class="widget-action" onclick="ss('s-asso-cop')">
+              + Nouvelle <i class="fas fa-arrow-right"></i>
+            </div>
+          </div>
+          <div id="missions-list"></div>
+        </div>
+        
+        <div>
+          <div class="dashboard-widget" style="margin-bottom:1rem">
+            <div class="widget-header">
+              <div class="widget-title">Matchs / semaine</div>
+            </div>
+            <div class="chart-container" id="weekly-chart">
+              <div class="chart-bar" style="height:32%; background:var(--accent1)"></div>
+              <div class="chart-bar" style="height:50%; background:var(--accent1)"></div>
+              <div class="chart-bar" style="height:42%; background:var(--accent1)"></div>
+              <div class="chart-bar" style="height:68%; background:var(--accent1)"></div>
+              <div class="chart-bar" style="height:88%; background:var(--accent1); opacity:1"></div>
+              <div class="chart-bar" style="height:72%; background:var(--accent1)"></div>
+            </div>
+            <div class="chart-labels">
+              <span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span><span>S6</span>
+            </div>
+          </div>
+          
+          <div class="dashboard-widget">
+            <div class="widget-header">
+              <div class="widget-title">Derniers matchs</div>
+              <div class="widget-action" onclick="ss('s-asso-cands');loadCandidates()">
+                Voir tous <i class="fas fa-arrow-right"></i>
+              </div>
+            </div>
+            <div class="feed-container" id="recent-matches"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// API Configuration
+const API_URL = 'http://localhost:5000/api';
+let authToken = localStorage.getItem('token');
+let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+// Auth functions
+function showAuth(role) {
+  document.getElementById('auth-modal').style.display = 'flex';
+  localStorage.setItem('selectedRole', role);
+}
+
+function closeAuth() {
+  document.getElementById('auth-modal').style.display = 'none';
+}
+
+function showRegister() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('register-form').style.display = 'block';
+}
+
+function showLogin() {
+  document.getElementById('login-form').style.display = 'block';
+  document.getElementById('register-form').style.display = 'none';
+}
+
+async function handleLogin() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    
+    const data = await response.json();
+    if (data.token) {
+      authToken = data.token;
+      currentUser = data.user;
+      localStorage.setItem('token', authToken);
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      closeAuth();
+      
+      if (currentUser.type === 'citizen') {
+        go('citizen');
+        loadUserProfile();
+      } else {
+        go('asso');
+        loadAssociationData();
+      }
+    } else {
+      alert('Login failed');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Login failed');
+  }
+}
+
+async function handleRegister() {
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  const userType = document.getElementById('reg-type').value;
+  
+  try {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, userType })
+    });
+    
+    const data = await response.json();
+    if (data.token) {
+      authToken = data.token;
+      currentUser = data.user;
+      localStorage.setItem('token', authToken);
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      closeAuth();
+      
+      if (userType === 'citizen') {
+        go('citizen');
+        loadUserProfile();
+      } else {
+        go('asso');
+        loadAssociationData();
+      }
+    } else {
+      alert('Registration failed');
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    alert('Registration failed');
+  }
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  authToken = null;
+  currentUser = {};
+  ss('s-land');
+}
+
+// Utility functions
+function ss(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function toast(msg, type = 'c') {
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.innerHTML = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ============= CITIZEN FUNCTIONS =============
+let missions = [];
+let currentMissionIndex = 0;
+let likedMissions = [];
+
+async function loadUserProfile() {
+  document.getElementById('citizen-name').textContent = currentUser.name || 'Citoyen';
+  document.getElementById('c-uname').textContent = currentUser.name || 'Mon Profil';
+  await loadMissions();
+}
+
+async function loadMissions() {
+  try {
+    const response = await fetch(`${API_URL}/missions`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    missions = await response.json();
+    renderCards();
+  } catch (error) {
+    console.error('Error loading missions:', error);
+    missions = [
+      {
+        id: 1,
+        org: 'Les Petits Codeurs',
+        title: 'Mentor informatique pour ados',
+        emoji: '💻',
+        score: 96,
+        impact: 'Accompagner 8 jeunes (12-17 ans) dans l\'apprentissage du code — 1 soir/sem près de chez toi.',
+        tags: [{t:'Dev Web',c:'s'},{t:'Mentorat',c:'v'},{t:'1 soir/sem',c:'t'}],
+        reasons: ['Compétences tech alignées à 100%', 'Même quartier (15 min)'],
+        meta: {loc:'Tunis El Menzah', eng:'4h/mois', urgent: true}
+      }
+    ];
+    renderCards();
+  }
+}
+
+function go(role) {
+  if (role === 'citizen') {
+    ss('s-citizen');
+    buildProfileForm();
+    loadMissions();
+    ctab('swipe');
+  } else {
+    ss('s-asso-dash');
+    loadAssociationData();
+  }
+}
+
+function ctab(tab) {
+  document.getElementById('cv-swipe').style.display = tab === 'swipe' ? 'flex' : 'none';
+  document.getElementById('cv-profile').style.display = tab === 'profile' ? 'flex' : 'none';
+  document.getElementById('tab-swipe').className = 'ttab' + (tab === 'swipe' ? ' ac' : '');
+  document.getElementById('tab-profile').className = 'ttab' + (tab === 'profile' ? '' : '');
+}
+
+function buildProfileForm() {
+  const skills = ['Développement Web', 'Design UX/UI', 'Communication', 'Marketing Digital', 'Gestion projet', 'Comptabilité', 'Droit', 'Photographie', 'Vidéo', 'Traduction', 'Formation/Pédagogie', 'Data & Excel', 'Réseaux sociaux', 'Écriture & Rédaction'];
+  const vals = ['🌱 Environnement', '📚 Éducation', '⚖️ Justice sociale', '🏥 Santé', '🌍 Solidarité', '🎨 Culture', '🏘️ Local', '💻 Numérique inclusif', '🤲 Humanitaire'];
+  const avs = ['Lundi soir', 'Mardi soir', 'Mercredi soir', 'Jeudi soir', 'Vendredi soir', 'Sam. matin', 'Sam. après-midi', 'Dim. matin', 'Télétravail OK'];
+  
+  const skillsDiv = document.getElementById('skills-chips');
+  if (skillsDiv.children.length) return;
+  
+  skills.forEach(s => {
+    const c = document.createElement('span');
+    c.className = 'chip';
+    c.textContent = s;
+    c.onclick = () => c.classList.toggle('on');
+    skillsDiv.appendChild(c);
+  });
+  
+  vals.forEach(v => {
+    const c = document.createElement('span');
+    c.className = 'chip';
+    c.textContent = v;
+    c.onclick = () => c.classList.toggle('on');
+    document.getElementById('values-chips').appendChild(c);
+  });
+  
+  avs.forEach(a => {
+    const c = document.createElement('span');
+    c.className = 'chip';
+    c.textContent = a;
+    c.onclick = () => c.classList.toggle('on');
+    document.getElementById('avail-chips').appendChild(c);
+  });
+}
+
+async function analyzeProfile() {
+  const name = document.getElementById('p-name').value.trim() || 'Citoyen';
+  const city = document.getElementById('p-city').value.trim() || 'non précisée';
+  const job = document.getElementById('p-job').value.trim() || 'non précisé';
+  const age = document.getElementById('p-age').value || '25';
+  const skills = [...document.querySelectorAll('#skills-chips .chip.on')].map(c => c.textContent);
+  const values = [...document.querySelectorAll('#values-chips .chip.on')].map(c => c.textContent);
+  const availability = [...document.querySelectorAll('#avail-chips .chip.on')].map(c => c.textContent);
+  
+  const btn = document.getElementById('analyze-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyse en cours…';
+  
+  const resultDiv = document.getElementById('profile-result');
+  resultDiv.innerHTML = '<div class="ai-thinking"><i class="fas fa-spinner fa-spin"></i> L\'IA analyse ton profil…</div>';
+  
+  try {
+    const response = await fetch(`${API_URL}/profile/analyze`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ name, city, age, job, skills, values, availability })
+    });
+    
+    const data = await response.json();
+    
+    document.getElementById('c-uname').textContent = name;
+    document.getElementById('c-score').textContent = data.score + '/100';
+    document.getElementById('ai-tip').textContent = data.advice || 'Tes matchs sont prêts !';
+    
+    resultDiv.innerHTML = `
+      <div style="background:rgba(127,255,212,0.05); border:1px solid rgba(127,255,212,0.15); border-radius:16px; padding:1.2rem">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem">
+          <span style="font-family:'Clash Display',sans-serif; font-weight:700; font-size:1.1rem">Score IA: ${data.score}/100</span>
+          <span style="color:var(--primary)"><i class="fas fa-check-circle"></i> Analyse complète</span>
+        </div>
+        <div style="margin-bottom:0.8rem">
+          <strong style="color:var(--text-muted)">Recommandations:</strong> ${data.recommendations?.join(', ') || 'Non spécifié'}
+        </div>
+        <div style="margin-bottom:0.8rem">
+          <strong style="color:var(--text-muted)">Soft skills:</strong> ${data.soft_skills?.join(', ') || 'Détectés'}
+        </div>
+        <div>
+          <strong style="color:var(--text-muted)">Conseil:</strong> ${data.advice}
+        </div>
+      </div>
+    `;
+    
+    btn.innerHTML = '<i class="fas fa-check"></i> Profil analysé — Voir les missions →';
+    btn.onclick = () => ctab('swipe');
+    toast('✅ Profil analysé ! Tes missions personnalisées t\'attendent.');
+  } catch (error) {
+    console.error('Analysis error:', error);
+    resultDiv.innerHTML = '<div style="color:var(--danger)"><i class="fas fa-exclamation-circle"></i> Erreur lors de l\'analyse. Réessaie.</div>';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderCards() {
+  const stage = document.getElementById('stage');
+  stage.innerHTML = '';
+  
+  const remaining = missions.slice(currentMissionIndex);
+  
+  if (!remaining.length) {
+    stage.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🎯</div>
+        <div class="empty-state-title">Tu as tout vu !</div>
+        <div class="empty-state-desc">Reviens demain pour de nouvelles missions</div>
+        <button onclick="resetMissions()" class="auth-btn" style="width:auto; padding:0.6rem 1.5rem">Recommencer</button>
+      </div>
+    `;
+    document.getElementById('cnt').textContent = '0 mission';
+    return;
+  }
+  
+  remaining.slice(0, 3).reverse().forEach((m, i) => {
+    stage.appendChild(buildCard(m, 2 - i));
+  });
+  
+  document.getElementById('cnt').textContent = remaining.length + ' mission' + (remaining.length > 1 ? 's' : '');
+  attachDrag();
+}
+
+function buildCard(m, pos) {
+  const d = document.createElement('div');
+  d.className = `scard p${pos + 1}`;
+  d.dataset.id = m.id;
+  
+  const scoreColor = m.score >= 90 ? 'var(--primary)' : m.score >= 84 ? 'var(--warning)' : 'var(--secondary)';
+  
+  d.innerHTML = `
+    <div class="overlay-like">MATCH!</div>
+    <div class="overlay-pass">SKIP</div>
+    <div class="card-header" style="background:${m.bg || 'rgba(116,185,255,0.1)'}">
+      <div class="card-emoji-bg">${m.emoji}</div>
+      <div class="org-badge">${m.org}</div>
+      <div class="score-badge" style="color:${scoreColor}; border-color:${scoreColor}40">${m.score}%</div>
+      ${m.meta?.urgent ? '<div class="urgent-tag">🚨 URGENT</div>' : ''}
+      <div class="card-title">${m.title}</div>
+    </div>
+    <div class="card-body">
+      <div class="impact-box"><strong>Impact attendu</strong>${m.impact}</div>
+      <div class="tags-container">${m.tags?.map(t => `<span class="tag tag-${t.c}">${t.t}</span>`).join('') || ''}</div>
+      <div class="why-box">
+        <div class="why-title">🤖 Pourquoi ce match</div>
+        ${(m.reasons || ['Match IA en cours...']).map(r => `<div class="why-item">${r}</div>`).join('')}
+      </div>
+      <div class="card-meta">
+        <span><i class="fas fa-map-marker-alt"></i> ${m.meta?.loc || 'À distance'}</span>
+        <span><i class="far fa-clock"></i> ${m.meta?.eng || 'Flexible'}</span>
+      </div>
+    </div>
+  `;
+  return d;
+}
+
+function attachDrag() {
+  const card = document.querySelector('.scard.p1');
+  if (!card) return;
+  
+  let startX, startY, dragging = false;
+  const overlayLike = card.querySelector('.overlay-like');
+  const overlayPass = card.querySelector('.overlay-pass');
+  
+  const onDragStart = (e) => {
+    dragging = true;
+    const point = e.touches ? e.touches[0] : e;
+    startX = point.clientX;
+    startY = point.clientY;
+    card.style.transition = 'none';
+  };
+  
+  const onDragMove = (e) => {
+    if (!dragging) return;
+    const point = e.touches ? e.touches[0] : e;
+    const dx = point.clientX - startX;
+    const dy = point.clientY - startY;
+    card.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx * 0.075}deg)`;
+    
+    const opacity = Math.min(Math.abs(dx) / 120, 1);
+    if (dx > 20) {
+      overlayLike.style.opacity = opacity;
+      overlayPass.style.opacity = 0;
+    } else if (dx < -20) {
+      overlayPass.style.opacity = opacity;
+      overlayLike.style.opacity = 0;
+    } else {
+      overlayLike.style.opacity = 0;
+      overlayPass.style.opacity = 0;
+    }
+  };
+  
+  const onDragEnd = (e) => {
+    if (!dragging) return;
+    dragging = false;
+    card.style.transition = 'transform 0.3s';
+    
+    const point = e.changedTouches ? e.changedTouches[0] : e;
+    const dx = point.clientX - startX;
+    
+    if (dx > 90) {
+      swipe('r');
+    } else if (dx < -90) {
+      swipe('l');
+    } else {
+      card.style.transform = '';
+      overlayLike.style.opacity = 0;
+      overlayPass.style.opacity = 0;
+    }
+  };
+  
+  card.addEventListener('mousedown', onDragStart);
+  card.addEventListener('touchstart', onDragStart, { passive: true });
+  window.addEventListener('mousemove', onDragMove);
+  window.addEventListener('touchmove', onDragMove, { passive: true });
+  window.addEventListener('mouseup', onDragEnd);
+  window.addEventListener('touchend', onDragEnd);
+}
+
+function swipe(direction) {
+  const card = document.querySelector('.scard.p1');
+  if (!card) return;
+  
+  const missionId = parseInt(card.dataset.id);
+  const mission = missions.find(m => m.id === missionId);
+  
+  card.classList.add(direction === 'r' ? 'fr' : 'fl');
+  
+  if (direction === 'r') {
+    likedMissions.push(mission);
+    updateLikedList();
+    showMatch(mission);
+  }
+  
+  currentMissionIndex++;
+  setTimeout(() => renderCards(), direction === 'r' ? 1200 : 380);
+}
+
+function updateLikedList() {
+  document.getElementById('lc').textContent = likedMissions.length;
+  
+  const list = document.getElementById('liked-list');
+  if (likedMissions.length === 0) {
+    list.innerHTML = '<div style="font-size:0.8rem; color:var(--text-muted); font-style:italic">Aucune encore</div>';
+  } else {
+    list.innerHTML = likedMissions.map(m => `
+      <div class="liked-item">
+        <span style="font-size:1.2rem">${m.emoji}</span>
+        <span style="font-size:0.8rem; font-weight:500; flex:1">${m.title}</span>
+        <span style="font-size:0.7rem; color:var(--primary); font-weight:700">${m.score}%</span>
+      </div>
+    `).join('');
+  }
+}
+
+function showMatch(mission) {
+  document.getElementById('match-detail').innerHTML = `
+    <div class="match-org">${mission.org}</div>
+    <div class="match-title">${mission.title}</div>
+    <div class="match-row">
+      <div>
+        <div class="match-score">${mission.score}%</div>
+        <div class="match-score-label">compatibilité</div>
+      </div>
+      <div class="match-reasons">
+        ${(mission.reasons || ['Match détecté !']).slice(0, 2).map(r => `✓ ${r}`).join('<br>')}
+      </div>
+    </div>
+  `;
+  ss('s-match');
+}
+
+function resetMissions() {
+  currentMissionIndex = 0;
+  likedMissions = [];
+  updateLikedList();
+  renderCards();
+}
+
+function toggleFilter(el) {
+  el.classList.toggle('on');
+}
+
+// ============= ASSOCIATION FUNCTIONS =============
+let associationData = {};
+
+async function loadAssociationData() {
+  try {
+    const response = await fetch(`${API_URL}/dashboard/stats`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const stats = await response.json();
+    updateDashboardStats(stats);
+  } catch (error) {
+    console.error('Error loading dashboard:', error);
+  }
+  
+  const assoName = currentUser.name || 'Greenpeace Maroc';
+  document.querySelectorAll('#asso-name, #asso-display-name, #asso-name-side, #dash-asso-display, #dash-greeting').forEach(el => {
+    if (el) el.textContent = assoName;
+  });
+  
+  renderMissionsList();
+  loadCandidates();
+}
+
+function updateDashboardStats(stats) {
+  document.getElementById('stat-missions').textContent = stats.active_missions || 7;
+  document.getElementById('stat-candidates').textContent = stats.total_candidates || 24;
+  document.getElementById('stat-match-rate').textContent = (stats.match_rate || 89) + '%';
+  document.getElementById('stat-impact').textContent = (stats.people_impacted || 1200).toLocaleString();
+  
+  document.getElementById('stat-candidates-change').innerHTML = `+${stats.new_candidates || 4} ↑`;
+  document.querySelectorAll('.noti').forEach(el => {
+    el.textContent = stats.new_candidates || 4;
+  });
+}
+
+function renderMissionsList() {
+  const missionsList = document.getElementById('missions-list');
+  if (!missionsList) return;
+  
+  missionsList.innerHTML = `
+    <div class="mission-row">
+      <div class="mission-dot dot-active"></div>
+      <div class="mission-info">
+        <div class="mission-name">Campagne comm. digitale</div>
+        <div class="mission-meta">3/5 bénévoles · 15 mars</div>
+      </div>
+      <div class="mission-badge">8 candidats</div>
+    </div>
+    <div class="mission-row">
+      <div class="mission-dot dot-pending"></div>
+      <div class="mission-info">
+        <div class="mission-name">Atelier sensibilisation écoles</div>
+        <div class="mission-meta">0/3 bénévoles · 5 mars 🚨</div>
+      </div>
+      <div class="mission-badge">6 candidats</div>
+    </div>
+    <div class="mission-row">
+      <div class="mission-dot dot-active"></div>
+      <div class="mission-info">
+        <div class="mission-name">Design contenus réseaux</div>
+        <div class="mission-meta">2/2 bénévoles · En cours</div>
+      </div>
+      <div class="mission-badge">✅ Complet</div>
+    </div>
+  `;
+  
+  const recentMatches = document.getElementById('recent-matches');
+  if (recentMatches) {
+    recentMatches.innerHTML = `
+      <div class="feed-item">
+        <div class="feed-icon">🙋</div>
+        <div class="feed-content">
+          <div class="feed-name">Amira B. — Campagne comm.</div>
+          <div class="feed-time">Il y a 12 min</div>
+        </div>
+        <div class="feed-score">96%</div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-icon">👨</div>
+        <div class="feed-content">
+          <div class="feed-name">Karim O. — Atelier écoles</div>
+          <div class="feed-time">Il y a 1h</div>
+        </div>
+        <div class="feed-score">88%</div>
+      </div>
+    `;
+  }
+}
+
+// ============= COPILOT FUNCTIONS =============
+function quickPrompt(text) {
+  document.getElementById('cop-in').value = text;
+  copSend();
+}
+
+async function copSend() {
+  const input = document.getElementById('cop-in');
+  const message = input.value.trim();
+  if (!message) return;
+  
+  input.value = '';
+  appendMessage(message, 'user');
+  
+  const sendBtn = document.getElementById('cop-send');
+  sendBtn.disabled = true;
+  
+  const typingDiv = document.createElement('div');
+  typingDiv.id = 'typing-indicator';
+  typingDiv.className = 'message message-ai';
+  typingDiv.innerHTML = '<div class="ail"><i class="fas fa-robot"></i> CoPilot IA</div><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  document.getElementById('cop-msgs').appendChild(typingDiv);
+  
+  try {
+    const response = await fetch(`${API_URL}/ai/generate-mission`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: message })
+    });
+    
+    document.getElementById('typing-indicator')?.remove();
+    
+    const data = await response.json();
+    appendMessage('Voici une mission générée à partir de votre description :', 'ai');
+    updateMissionPreview(data);
+    
+  } catch (error) {
+    console.error('AI generation error:', error);
+    document.getElementById('typing-indicator')?.remove();
+    appendMessage('Désolé, une erreur est survenue. Veuillez réessayer.', 'ai');
+  }
+  
+  sendBtn.disabled = false;
+}
+
+function appendMessage(text, role) {
+  const msgs = document.getElementById('cop-msgs');
+  const div = document.createElement('div');
+  div.className = 'message ' + (role === 'ai' ? 'message-ai' : 'message-user');
+  
+  if (role === 'ai') {
+    div.innerHTML = `<div class="ail"><i class="fas fa-robot"></i> CoPilot IA</div>${text.replace(/\n/g, '<br>')}`;
+  } else {
+    div.textContent = text;
+  }
+  
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function updateMissionPreview(mission) {
+  document.getElementById('mp-n').textContent = mission.title || 'Mission de bénévolat';
+  document.getElementById('mp-e').textContent = mission.emoji || '🤝';
+  
+  const impactEl = document.getElementById('mp-imp');
+  impactEl.textContent = mission.impact || 'Impact à définir';
+  impactEl.style.fontStyle = 'normal';
+  impactEl.style.color = 'var(--text)';
+  
+  if (mission.tags && mission.tags.length) {
+    document.getElementById('mp-tags').innerHTML = mission.tags.map(t => 
+      `<span class="preview-tag tag-${t.c || 's'}">${t.t}</span>`
+    ).join('');
+  }
+  
+  document.getElementById('mp-eng').textContent = mission.commitment || 'Flexible';
+  
+  document.getElementById('mp-scores').style.display = 'block';
+  document.getElementById('ms1').textContent = mission.profiles || '—';
+  document.getElementById('ms2').textContent = mission.attract || '—';
+  document.getElementById('ms3').textContent = mission.matches || '—';
+  
+  document.getElementById('pub-btn').disabled = false;
+}
+
+async function publishMission() {
+  const mission = {
+    title: document.getElementById('mp-n').textContent,
+    emoji: document.getElementById('mp-e').textContent,
+    impact: document.getElementById('mp-imp').textContent,
+    commitment: document.getElementById('mp-eng').textContent,
+    ai_generated: true
+  };
+  
+  try {
+    const response = await fetch(`${API_URL}/missions/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify(mission)
+    });
+    
+    if (response.ok) {
+      toast('🚀 <strong>Mission publiée !</strong><br>Le matching IA démarre — candidats dans les 24h.', 'a');
+      setTimeout(() => {
+        ss('s-asso-cands');
+        loadCandidates();
+      }, 2200);
+    }
+  } catch (error) {
+    console.error('Error publishing mission:', error);
+    toast('Erreur lors de la publication', 'a');
+  }
+}
+
+// ============= CANDIDATES FUNCTIONS =============
+let candidates = [];
+
+async function loadCandidates() {
+  try {
+    const response = await fetch(`${API_URL}/candidates`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    candidates = await response.json();
+    renderCandidates();
+  } catch (error) {
+    console.error('Error loading candidates:', error);
+    candidates = [
+      {
+        name: 'Amira Benali',
+        age: 24,
+        city: 'Tunis',
+        job: 'Designer UX',
+        emoji: '🙋',
+        score: 96,
+        mission: 'Campagne comm.',
+        skills: ['Design UX', 'Social Media'],
+        values: ['🌱 Environnement'],
+        sm: 95,
+        vm: 98,
+        am: 90,
+        why: 'Compétences alignées à 100%, valeur "Environnement" partagée.',
+        status: 'new'
+      },
+      {
+        name: 'Karim Ouhabi',
+        age: 28,
+        city: 'Casablanca',
+        job: 'Chef de projet',
+        emoji: '👨',
+        score: 88,
+        mission: 'Atelier écoles',
+        skills: ['Gestion projet', 'Formation'],
+        values: ['📚 Éducation'],
+        sm: 82,
+        vm: 94,
+        am: 88,
+        why: 'Expérience formation détectée, disponible week-ends.',
+        status: 'new'
+      }
+    ];
+    renderCandidates();
+  }
+}
+
+function renderCandidates() {
+  const grid = document.getElementById('cands-grid');
+  if (!grid) return;
+  
+  document.getElementById('total-candidates').textContent = candidates.length;
+  document.getElementById('new-candidates').textContent = candidates.filter(c => c.status === 'new').length;
+  
+  grid.innerHTML = candidates.map(c => buildCandidateCard(c)).join('');
+}
+
+function buildCandidateCard(c) {
+  const statusClass = c.status === 'new' ? 'badge-new' : c.status === 'validated' ? 'badge-validated' : '';
+  const statusLabel = c.status === 'new' ? '🆕 Nouveau' : c.status === 'validated' ? '✅ Validé' : '⏳ En attente';
+  const scoreClass = c.score >= 90 ? 'score-high' : c.score >= 84 ? 'score-medium' : '';
+  
+  return `
+    <div class="candidate-card" data-id="${c.name}">
+      <div class="candidate-header">
+        <div class="candidate-avatar">${c.emoji}</div>
+        <div class="candidate-info">
+          <div class="candidate-name">${c.name}</div>
+          <div class="candidate-meta">${c.age} ans · ${c.city}</div>
+        </div>
+        <div class="candidate-score ${scoreClass}">${c.score}%</div>
+      </div>
+      <div class="candidate-body">
+        <div class="candidate-badge ${statusClass}">${statusLabel}</div>
+        <div class="mission-tag">Mission : ${c.mission}</div>
+        <div class="candidate-tags">
+          ${c.skills.map(s => `<span class="candidate-tag tag-skill">${s}</span>`).join('')}
+          ${c.values.map(v => `<span class="candidate-tag tag-value">${v}</span>`).join('')}
+        </div>
+        <div class="score-bars">
+          <div class="bar-item">
+            <div class="bar-label">Compétences</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:${c.sm}%; background:var(--gradient-1)"></div></div>
+            <div class="bar-value">${c.sm}%</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Valeurs</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:${c.vm}%; background:var(--gradient-2)"></div></div>
+            <div class="bar-value">${c.vm}%</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Dispo</div>
+            <div class="bar-bg"><div class="bar-fill" style="width:${c.am}%; background:var(--gradient-3)"></div></div>
+            <div class="bar-value">${c.am}%</div>
+          </div>
+        </div>
+        <div class="candidate-why">🤖 ${c.why}</div>
+        <div class="candidate-actions">
+          <button class="btn-validate" onclick="validateCandidate('${c.name}')">✓ Valider</button>
+          <button class="btn-later" onclick="laterCandidate('${c.name}')"><i class="far fa-clock"></i></button>
+          <button class="btn-refuse" onclick="refuseCandidate('${c.name}')"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function validateCandidate(name) {
+  const card = document.querySelector(`.candidate-card[data-id="${name}"]`);
+  if (!card) return;
+  
+  card.style.borderColor = 'rgba(85,239,196,0.4)';
+  card.style.background = 'rgba(85,239,196,0.02)';
+  
+  const badge = card.querySelector('.candidate-badge');
+  badge.className = 'candidate-badge badge-validated';
+  badge.textContent = '✅ Validé';
+  
+  const btn = card.querySelector('.btn-validate');
+  btn.textContent = '✓ Validé';
+  btn.style.opacity = '0.5';
+  btn.disabled = true;
+  
+  toast(`✅ <strong>${name}</strong> validé·e — message envoyé !`, 'a');
+}
+
+function laterCandidate(name) {
+  const card = document.querySelector(`.candidate-card[data-id="${name}"]`);
+  if (!card) return;
+  
+  const badge = card.querySelector('.candidate-badge');
+  badge.textContent = '⏳ En attente';
+}
+
+function refuseCandidate(name) {
+  const card = document.querySelector(`.candidate-card[data-id="${name}"]`);
+  if (!card) return;
+  card.style.opacity = '0.4';
+  card.style.pointerEvents = 'none';
+}
+
+function filterBy(type, el) {
+  document.querySelectorAll('.sidebar .chip-a').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function filterStatus(status, el) {
+  el.classList.toggle('on');
+}
+
+function sortBy(type) {}
+
+function openChat() {
+  toast('💬 Chat ouvert avec l\'association', 'c');
+}
+
+// ============= INITIALIZATION =============
+document.addEventListener('DOMContentLoaded', () => {
+  const date = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('current-date').textContent = date.toLocaleDateString('fr-FR', options);
+  
+  if (authToken && currentUser.type) {
+    if (currentUser.type === 'citizen') {
+      go('citizen');
+      loadUserProfile();
+    } else {
+      go('asso');
+      loadAssociationData();
+    }
+  }
+});
+</script>
+</body>
+</html>
